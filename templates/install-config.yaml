@@ -1,0 +1,10 @@
+apiVersion: v1
+baseDomain: 
+platform:
+  <platform>: 
+    region:
+    baseDomainResourceGroupName:
+pullSecret:
+sshKey:
+metadata:
+  name:

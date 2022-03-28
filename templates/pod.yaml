@@ -1,0 +1,19 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: kubelet-density-{{.Iteration}}
+  namespace: burner
+  labels:
+    name: kubelet-density
+spec:
+  nodeSelector:
+    node-role.kubernetes.io/worker: ""
+  containers:
+  - name: kubelet-density
+    image: busybox:latest
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+    imagePullPolicy: IfNotPresent
+    securityContext:
+      privileged: false

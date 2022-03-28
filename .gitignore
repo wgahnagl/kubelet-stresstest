@@ -1,0 +1,13 @@
+auth/*
+!auth/README.md
+*registry-build.json
+*kubeconfig.txt 
+tmp/*
+!tmp/README.md
+azure/*
+!azure/README.md
+aws/*
+!aws/createawscluster.sh
+!aws/README.md
+config.sh
+*config.sh
