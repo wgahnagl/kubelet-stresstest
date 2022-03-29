@@ -11,3 +11,5 @@ aws/*
 !aws/README.md
 config.sh
 *config.sh
+logs/*
+!logs/README.md

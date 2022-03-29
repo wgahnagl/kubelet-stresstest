@@ -5,11 +5,11 @@ while IFS= read -r line; do
     oc adm cordon $line 
 done <<< "$NODES"
 
-oc create -f burner.mcp.yaml
-oc create -f burner.mc.yaml 
+oc create -f $templatesLocation/burner.mcp.yaml
+oc create -f $templatesLocation/burner.mc.yaml 
 oc label machineconfigpool burner custom-kubelet=burner
-oc create -f setmaxpods.yaml
-oc create -f namespace.yaml
+oc create -f $templatesLocation/setmaxpods.yaml
+oc create -f $templatesLocation/namespace.yaml
 
 BASTIONNODE="$(oc get nodes | grep worker | awk '{print $1}' | sed -n '2 p')" 
 oc adm uncordon "$BASTIONNODE"
@@ -21,5 +21,6 @@ oc adm uncordon "$workingNode"
 oc label node "$workingNode" node-role.kubernetes.io/burner=
 
 ./podCreate.sh
-
 echo "node failed" 
+echo "gathering logs"
+./afterPods.sh
