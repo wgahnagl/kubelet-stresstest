@@ -13,3 +13,8 @@ config.sh
 *config.sh
 logs/*
 !logs/README.md
+.openshift_install*
+tls/*
+installers/*
+!installers/README.md
+openshift-install

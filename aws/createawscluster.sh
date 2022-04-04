@@ -1,9 +1,12 @@
 # https://openshift-dev.signin.aws.amazon.com/console
 # aws console 
-. ./config.sh
-. ./setup.sh
+. ./config.sh aws 
+. ./setup.sh aws
+
 aws iam get-user 
-oc registry login --registry registry.ci.openshift.org --to=registry-build.json 
-jq -s ".[0] * .[1]" registry-build.json ~/.docker/config.json > tmp.json
-mv tmp.json ~/.docker/config.json
-./openshift-install --dir ../$secretslocation create cluster
+
+podman login -u $quayUsername -p $quayPassword --authfile auth/pull-secret
+# oc registry login --registry registry.ci.openshift.org --to=auth/registry-build.json 
+# jq -s ".[0] * .[1]" auth/registry-build.json ~/.docker/config.json > tmp.json
+# mv tmp.json ~/.docker/config.json
+$installerLocation --dir $secretsLocation create cluster

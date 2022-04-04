@@ -1,6 +1,7 @@
 . ./config.sh
 echo $configLoaded
 NODES="$(oc get nodes | grep worker | awk '{print $1}')"
+oc get nodes
 while IFS= read -r line; do 
     oc adm cordon $line 
 done <<< "$NODES"

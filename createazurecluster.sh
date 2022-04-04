@@ -1,5 +1,5 @@
-. ./config.sh
-. ./setup.sh
+. ./config.sh azure
+. ./setup.sh azure
 echo $configLoaded
 
 # login and store the credentials 
@@ -7,6 +7,8 @@ az login --scope https://graph.windows.net//.default
 credentials=$(az ad sp create-for-rbac --role Owner --name $servicePrincipalName) 
 appId=$(echo "$credentials" | grep appId | awk '{print $2}' | sed 's/,//' | sed 's/"//g')
 password=$(echo "$credentials" | grep password | awk '{print $2}' | sed 's/,//' | sed 's/"//g')  
+echo $appId
+echo $password
 
 az ad sp create-for-rbac --role Owner --name $servicePrincipalName \
    | jq --arg sub_id "$(az account show | jq -r '.id')" \
@@ -22,5 +24,8 @@ az role assignment create --role "User Access Administrator"\
 
 # oc login that gets updated by the setup script
 cat $loginCommandLocation | bash 
-
-./$azureInstallerLocation --dir $secretsLocation create cluster
+oc registry login --registry registry.ci.openshift.org --to=registry-build.json 
+jq -s ".[0] * .[1]" registry-build.json ~/.docker/config.json > tmp.json
+mv tmp.json ~/.docker/config.json
+./getNewInstaller.sh
+./$installerLocation --dir $secretsLocation create cluster

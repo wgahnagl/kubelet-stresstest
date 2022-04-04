@@ -1,4 +1,5 @@
-. ./config.sh
+export platform=$1
+. ./config.sh "$platform"
 
 DAY=86400
 loginCommandModified=$(stat -c %Y $loginCommandLocation) 
@@ -11,14 +12,24 @@ if [ $secondsSinceLastEdit -gt $DAY ]; then
     echo $loginCommand > $loginCommandLocation
     echo "updating login command"
 fi
-rm -f -- metadata.json 
+
+rm -f -- $secretsLocation/metadata.json 
 rm -f -- $counterSaveFile
-rm -f -- kubeconfig.txt
-rm -f -- cluster.tfvars.json
-rm -f -- terraform*
+rm -f -- $secretsLocation/kubeconfig.txt
+rm -f -- $secretsLocation/cluster.tfvars.json
+rm -f -- $secretsLocation/terraform*
 rm -f -- $secretsLocation/kubeconfig
+rm -f -- $secretsLocation/bootstrap.tfvars.json
+rm -f -- $secretsLocation/cluster.tfvars.json 
+rm -f -- $secretsLocation/registry-build.json
 rm -f -- .openshift_install_state.json
 rm -f -- $osServicePrincipalLocation
+
+rm -f -- terraform* 
+rm -f -- bootstrap.tfvars.json
+rm -f -- cluster.tfvars.json
+rm -f -- metadata.json 
+rm -f -- registry-build.json 
 
 pullSecretModified=$(stat -c %Y $pullSecretLocation) 
 now=$(date +%s)
@@ -28,9 +39,9 @@ if [ $secondsSinceLastEdit -gt $DAY ]; then
     echo "paste in pull secret" 
     read pullSecret
     echo $pullSecret > $pullSecretLocation
-    echo "updating pull secret" ; else
-    pullSecret=$(cat $pullSecretLocation)
+    echo "updating pull secret" ; 
 fi 
+pullSecret=$(cat $pullSecretLocation)
 
 sed "/pullSecret: */c pullSecret: '$pullSecret'" $installConfigTemplateLocation > $configLocation
 
@@ -39,7 +50,13 @@ sed -i "/sshKey: */c sshKey: '$sshKey'" $configLocation
 
 sed -i "s/region: */region: '$region'/" $configLocation
 
-sed -i "s/baseDomainResourceGroupName: */baseDomainResourceGroupName: $baseDomainResourceGroupName/" $configLocation
+if [[ $platform == "aws" ]]; then 
+    sed -i "s/baseDomainResourceGroupName: *//" $configLocation
+else 
+    if [[ $platform == "azure" ]]; then 
+        sed -i "s/baseDomainResourceGroupName: */baseDomainResourceGroupName: $baseDomainResourceGroupName/" $configLocation
+    fi 
+fi 
 
 sed -i "s/name: */name: $clusterName/" $configLocation
 

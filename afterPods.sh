@@ -1,5 +1,19 @@
 . ./config.sh
 time=$(date +'%Y-%m-%d_%T')
 # collects the logs from the cluster
-az vm restart -g $groupName -n $workingNode 
-oc debug node/$workingNode -- chroot /host "journalctl" "-b" "1" > $logDestination/$time"_"$workingNode.txt 
+
+if [[ $platform == "aws" ]]; then
+    echo "aws"
+    # AWS KUBECONFIG 
+else 
+    if [[ $platform == "azure" ]]; then 
+        # AZURE KUBECONFIG 
+        az vm restart -g $groupName -n $workingNode 
+    fi 
+fi 
+
+logsContent=$(oc debug node/$workingNode -- chroot /host "journalctl" "-b" "-1") 
+if ! [[ -z $logsContent ]]; then
+   echo "$logsContent" > $logDestination/$time"_"$platform"_"$workingNode.txt 
+fi 
+cp logs/* $googleDrivePath 
