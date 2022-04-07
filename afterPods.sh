@@ -1,4 +1,5 @@
-. ./config.sh
+export platform=$1
+. ./config.sh $platform
 time=$(date +'%Y-%m-%d_%T')
 # collects the logs from the cluster
 
