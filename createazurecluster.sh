@@ -27,5 +27,5 @@ cat $loginCommandLocation | bash
 oc registry login --registry registry.ci.openshift.org --to=registry-build.json 
 jq -s ".[0] * .[1]" registry-build.json ~/.docker/config.json > tmp.json
 mv tmp.json ~/.docker/config.json
-./getNewInstaller.sh
+#./getNewInstaller.sh
 ./$installerLocation --dir $secretsLocation create cluster

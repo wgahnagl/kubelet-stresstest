@@ -18,7 +18,7 @@ while "$nodeRunning"
     tmp=$(oc get nodes | grep burner | awk '{print $2}')
     running="Ready"
     schedulingDisabled="Ready,SchedulingDisabled"
-    echo "$tmp, $running, $maxPodsCounter"
+    echo "$tmp, $runningPods pods running"
     
     #if the burner node is still in the ready status
     if [[ $tmp == $running ]]; then

@@ -1,4 +1,4 @@
-. ./config.sh
+. ./config.sh 
 echo $configLoaded
 NODES="$(oc get nodes | grep worker | awk '{print $1}')"
 oc get nodes

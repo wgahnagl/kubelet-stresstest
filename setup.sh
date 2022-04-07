@@ -1,8 +1,9 @@
 export platform=$1
 . ./config.sh "$platform"
 
+
 DAY=86400
-loginCommandModified=$(stat -c %Y $loginCommandLocation) 
+loginCommandModified=$(stat -c %Y $loginCommandLocation 2> /dev/null) 
 now=$(date +%s)
 secondsSinceLastEdit=$((now-loginCommandModified))
 if [ $secondsSinceLastEdit -gt $DAY ]; then
@@ -18,12 +19,12 @@ rm -f -- $counterSaveFile
 rm -f -- $secretsLocation/kubeconfig.txt
 rm -f -- $secretsLocation/cluster.tfvars.json
 rm -f -- $secretsLocation/terraform*
-rm -f -- $secretsLocation/kubeconfig
 rm -f -- $secretsLocation/bootstrap.tfvars.json
 rm -f -- $secretsLocation/cluster.tfvars.json 
 rm -f -- $secretsLocation/registry-build.json
 rm -f -- .openshift_install_state.json
 rm -f -- $osServicePrincipalLocation
+rm -f -- ~/.kube/config
 
 rm -f -- terraform* 
 rm -f -- bootstrap.tfvars.json
@@ -31,7 +32,7 @@ rm -f -- cluster.tfvars.json
 rm -f -- metadata.json 
 rm -f -- registry-build.json 
 
-pullSecretModified=$(stat -c %Y $pullSecretLocation) 
+pullSecretModified=$(stat -c %Y $pullSecretLocation 2> /dev/null) 
 now=$(date +%s)
 secondsSinceLastEdit=$((now-pullSecretModified))
 if [ $secondsSinceLastEdit -gt $DAY ]; then
