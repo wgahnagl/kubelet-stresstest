@@ -1,7 +1,6 @@
 export platform=$1
 . ./config.sh "$platform"
 
-
 DAY=86400
 loginCommandModified=$(stat -c %Y $loginCommandLocation 2> /dev/null) 
 now=$(date +%s)
@@ -13,24 +12,33 @@ if [ $secondsSinceLastEdit -gt $DAY ]; then
     echo $loginCommand > $loginCommandLocation
     echo "updating login command"
 fi
-
-rm -f -- $secretsLocation/metadata.json 
 rm -f -- $counterSaveFile
+rm -f -- $secretsLocation/metadata.json 
 rm -f -- $secretsLocation/kubeconfig.txt
 rm -f -- $secretsLocation/cluster.tfvars.json
 rm -f -- $secretsLocation/terraform*
 rm -f -- $secretsLocation/bootstrap.tfvars.json
 rm -f -- $secretsLocation/cluster.tfvars.json 
 rm -f -- $secretsLocation/registry-build.json
+rm -f -- $secretsLocation/.openshift*
 rm -f -- .openshift_install_state.json
 rm -f -- $osServicePrincipalLocation
+rm -f -- $secretsLocation/vnet.tfvars.json
 rm -f -- ~/.kube/config
-
+rm -f -- ~/.azure/az.json
+rm -f -- ~/.azure/az.sess
+rm -f -- ~/.aws/credentials
+rm -f -- $secretsLocation/*bundle*
 rm -f -- terraform* 
 rm -f -- bootstrap.tfvars.json
 rm -f -- cluster.tfvars.json
 rm -f -- metadata.json 
 rm -f -- registry-build.json 
+rm -rf -- tls 
+rm -rf -- tmp
+
+mkdir -p auth 
+mkdir -p tmp 
 
 pullSecretModified=$(stat -c %Y $pullSecretLocation 2> /dev/null) 
 now=$(date +%s)

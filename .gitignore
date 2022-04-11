@@ -3,7 +3,6 @@ auth/*
 *registry-build.json
 *kubeconfig.txt 
 tmp/*
-!tmp/README.md
 azure/*
 !azure/README.md
 aws/*
@@ -12,9 +11,9 @@ aws/*
 config.sh
 *config.sh
 logs/*
-!logs/README.md
 .openshift_install*
 tls/*
 installers/*
 !installers/README.md
 openshift-install
+

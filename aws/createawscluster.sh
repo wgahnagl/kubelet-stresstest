@@ -1,7 +1,9 @@
+set -euo pipefail
+
 # https://openshift-dev.signin.aws.amazon.com/console
 # aws console 
 . ./config.sh aws 
-. ./setup.sh aws
+. ./common/setup.sh aws
 
 aws iam get-user 
 
