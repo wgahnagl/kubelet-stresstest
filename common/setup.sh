@@ -1,3 +1,8 @@
+if [[ -z "$1" ]]; then 
+    echo "please specify the type of cluster you want to test on"
+    exit 0
+fi 
+
 export platform=$1
 . ./config.sh "$platform"
 
@@ -12,7 +17,10 @@ if [ $secondsSinceLastEdit -gt $DAY ]; then
     echo $loginCommand > $loginCommandLocation
     echo "updating login command"
 fi
-rm -f -- $counterSaveFile
+
+cat $loginCommandLocation | bash
+
+rm -f -- $podCounterLocation
 rm -f -- $secretsLocation/metadata.json 
 rm -f -- $secretsLocation/kubeconfig.txt
 rm -f -- $secretsLocation/cluster.tfvars.json
@@ -47,28 +55,29 @@ if [ $secondsSinceLastEdit -gt $DAY ]; then
     xdg-open https://console.redhat.com/openshift/install/pull-secret 
     echo "paste in pull secret" 
     read pullSecret
+    $pullSecret=$(sed -r ‘s/\s+//g’<<<$pullSecret)
     echo $pullSecret > $pullSecretLocation
     echo "updating pull secret" ; 
 fi 
 pullSecret=$(cat $pullSecretLocation)
-
+sshKey=$(cat $sshLocation)
 sed "/pullSecret: */c pullSecret: '$pullSecret'" $installConfigTemplateLocation > $configLocation
-
-sshKey=$(cat $sshLocation) 
 sed -i "/sshKey: */c sshKey: '$sshKey'" $configLocation
-
 sed -i "s/region: */region: '$region'/" $configLocation
-
 if [[ $platform == "aws" ]]; then 
     sed -i "s/baseDomainResourceGroupName: *//" $configLocation
+
+    # creates the aws creds.csv
+    sed "s/exampleUsername/$awsUsername/" $awsConfigTemplateLocation > $awsConfigLocation
+    sed -i "s/exampleAccessKeyID/$awsAccessKey/" $awsConfigLocation
+    sed -i "s~exampleSecretAccessKey~$awsSecretAccessKey~" $awsConfigLocation
 else 
     if [[ $platform == "azure" ]]; then 
         sed -i "s/baseDomainResourceGroupName: */baseDomainResourceGroupName: $baseDomainResourceGroupName/" $configLocation
     fi 
 fi 
-
 sed -i "s/name: */name: $clusterName/" $configLocation
-
 sed -i "s/<platform>: */$platform:/" $configLocation
-
 sed -i "s/baseDomain: */baseDomain: $baseDomain/" $configLocation
+
+
