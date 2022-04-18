@@ -8,7 +8,7 @@ then simply run ./init.sh to see the help and begin testing.
 
 ## Commands 
 #### ./init.sh launch [aws/azure] 
-launches an aws or azure cluster with credentials provided during setup. 
+launches an aws or azure cluster with credentials provided during setup, and automatically runs test scripts on the launched cluster 
 
 #### ./init.sh [path] 
 copies an existing kubeconfig to the auth directory of the project and runs the test scripts
