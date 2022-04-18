@@ -15,8 +15,11 @@ fi
 
 rm -rf tmp
 
-logsContent=$(oc debug node/$workingNode -- chroot /host "journalctl" "-b" "-1") 
-if ! [[ -z $logsContent ]]; then
-   echo "$logsContent" > $logDestination/$time"_"$platform"_"$workingNode.txt 
+logsLocation=$logDestination/$time"_"$platform"_"$workingNode.txt 
+
+oc debug node/$workingNode -- chroot /host "journalctl" "-b" "-1" > $logsLocation
+if [[ -s $logsLocation ]]; then 
+    rm -f $logsLocation
 fi 
+
 cp logs/* $googleDrivePath 
