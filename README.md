@@ -1,6 +1,20 @@
-the goal of this project is to automatically create clusters, burn down nodes, and get logs from them to determine which parts fail first.
-set up your config by running cp templates/config.sh . and edit with your values
-to set up a cluster simply run ./creaeazurecluster.sh, and follow the prompts! 
-once the cluster is up run ./testscript.sh, and then ./afterPods.sh once you're done! 
+# Kubelet Stress Testing Toolkit
+a library of scripts useful for stress testing kubernetes clusters 
 
-this repo technically has a few other ways to provision an openshift cluster, but azure is working the best. Everything in this repo is subject to change as this is a work in progress! 
+## Getting Started 
+first, copy the template config out of the templates/config.sh folder, and rename it to config.sh in the top level of your directory. 
+Edit the values at the top of the file, and be sure to check the values on the section beneath. 
+then simply run ./init.sh to see the help and begin testing. 
+
+## Commands 
+#### ./init.sh launch [aws/azure] 
+launches an aws or azure cluster with credentials provided during setup. 
+
+#### ./init.sh [path] 
+copies an existing kubeconfig to the auth directory of the project and runs the test scripts
+
+#### ./init.sh destroy 
+destroys the most recently launched cluster 
+
+#### ./init collect 
+collects logs from the cluster described in auth/kubeconfig

@@ -18,7 +18,6 @@ if [ $secondsSinceLastEdit -gt $DAY ]; then
     echo "updating login command"
 fi
 
-cat $loginCommandLocation | bash
 
 rm -f -- $podCounterLocation
 rm -f -- $secretsLocation/metadata.json 
@@ -60,6 +59,12 @@ if [ $secondsSinceLastEdit -gt $DAY ]; then
     echo "updating pull secret" ; 
 fi 
 pullSecret=$(cat $pullSecretLocation)
+cat $loginCommandLocation | bash
+oc registry login --to=$registryPullSecretLocation
+jq -s ".[0] * .[1]" $pullSecretLocation $registryPullSecretLocation > $secretsLocation/tmp
+cat $secretsLocation/tmp | tr -d '[:space:]' > $pullSecretLocation
+
+
 sshKey=$(cat $sshLocation)
 sed "/pullSecret: */c pullSecret: '$pullSecret'" $installConfigTemplateLocation > $configLocation
 sed -i "/sshKey: */c sshKey: '$sshKey'" $configLocation

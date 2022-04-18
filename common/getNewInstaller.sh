@@ -3,7 +3,7 @@
 
 mkdir installers 2> /dev/null 
 cd installers
-oc adm release extract -a ../$pullSecretLocation --from="registry.ci.openshift.org/ocp/release:4.10.8"
+oc adm release extract -a ../$pullSecretLocation --tools quay.io/openshift-release-dev/ocp-release:4.10.10-x86_64
 mkdir install 2> /dev/null
 mv openshift-install* install
 cd install
