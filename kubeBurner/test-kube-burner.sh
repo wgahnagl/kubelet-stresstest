@@ -1,4 +1,4 @@
-export KUBECONFIG="kubeconfig.txt" 
+export KUBECONFIG="auth/auth/kubeconfig" 
 NODES="$(oc get nodes | grep worker | awk '{print $1}')"
 while IFS= read -r line; do 
     oc adm cordon $line 
@@ -26,6 +26,6 @@ WORKINGNODE="$(oc get nodes | grep worker | awk '{print $1}' | sed -n '1 p')"
 oc adm uncordon "$WORKINGNODE"
 oc label node "$WORKINGNODE" node-role.kubernetes.io/burner=
 
-podman run --mount type=bind,src=.,relabel=private,target=/var/configs --env KUBECONFIG=/var/configs/kubeconfig.txt kube-burner init -c /var/configs/kubelet-density.yml
+podman run --mount type=bind,src=.,relabel=private,target=/var/configs --env KUBECONFIG=/var/configs/kubeconfig.txt cloud-bulldozer/kube-burner:latest init -c /var/configs/kubelet-density.yml
 
 ssh core@"$BASTIONIP" -o StrictHostKeyChecking=no -i ~/.ssh/libra.pem

@@ -24,11 +24,12 @@ fi
 if [[ $1 == "launch" ]]; then 
     
     if [[ $2 == "aws" ]]; then
-        ./aws/createawscluster.sh
+        ./aws/createawscluster.sh aws
+        exit 0
     fi 
     if [[ $2 == "azure" ]]; then
-        echo "azure"
-        ./azure/createazurecluster.sh
+        ./azure/createazurecluster.sh azure
+        exit 0
     else 
         echo "unknown cluster cannot be launched. Options are aws or azure "
         help
@@ -53,6 +54,6 @@ if [[ -f $1 ]]; then
       ./common/testscript.sh
       exit 0
   else 
-      echo "file not found" 
+      echo "kubeconfig file not found" 
       help 
 fi 

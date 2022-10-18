@@ -16,6 +16,11 @@ if [ $secondsSinceLastEdit -gt $DAY ]; then
     read loginCommand
     echo $loginCommand > $loginCommandLocation
     echo "updating login command"
+    
+    # only login once a day 
+    if [[ $platform == "azure" ]]; then 
+        az login --scope https://graph.windows.net//.default
+    fi 
 fi
 
 
@@ -45,7 +50,6 @@ rm -rf -- tls
 rm -rf -- tmp
 
 mkdir -p auth 
-mkdir -p tmp 
 
 pullSecretModified=$(stat -c %Y $pullSecretLocation 2> /dev/null) 
 now=$(date +%s)
