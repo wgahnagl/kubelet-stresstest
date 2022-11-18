@@ -4,7 +4,7 @@ time=$(date +'%Y-%m-%d_%T')
 # collects the logs from the cluster
 
 if [[ $platform == "aws" ]]; then
-    echo "aws"
+    . ./common/awsLogs.sh $platform  
     # AWS KUBECONFIG 
 else 
     if [[ $platform == "azure" ]]; then 
@@ -13,8 +13,6 @@ else
     fi 
 fi 
 
-rm -rf tmp
-
 logsLocation=$logDestination/$time"_"$platform"_"$workingNode.txt 
 
 oc debug node/$workingNode -- chroot /host "journalctl" "-b" "-1" > $logsLocation
@@ -22,4 +20,3 @@ if [[ -s $logsLocation ]]; then
     rm -f $logsLocation
 fi 
 
-cp logs/* $googleDrivePath 

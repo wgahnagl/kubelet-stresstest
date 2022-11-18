@@ -20,6 +20,12 @@ if [ $secondsSinceLastEdit -gt $DAY ]; then
     # only login once a day 
     if [[ $platform == "azure" ]]; then 
         az login --scope https://graph.windows.net//.default
+    fi
+
+    if [[ $platform == "aws" ]]; then
+        xdg-open https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/security_credentials 
+        aws configure 
+        awsIP=$(oc get nodes | grep burner | awk '{print $1}' | grep -o -P '(?<=ip-).*(?=.ec2)')
     fi 
 fi
 
@@ -47,7 +53,6 @@ rm -f -- cluster.tfvars.json
 rm -f -- metadata.json 
 rm -f -- registry-build.json 
 rm -rf -- tls 
-rm -rf -- tmp
 
 mkdir -p auth 
 

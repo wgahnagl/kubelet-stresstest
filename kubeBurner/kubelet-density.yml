@@ -20,16 +20,21 @@ global:
 
 jobs:
   - name: kubelet-density
-    jobIterations: 50
+    jobIterations: 550
     qps: 20
     burst: 20
     namespacedIterations: false
-    namespace: kubelet-density
+    namespace: kubelet-density-heavy
     waitWhenFinished: false
     podWait: true
     objects:
+      - objectTemplate: /var/configs/templates/postgres-deployment.yml
+        replicas: 1
 
-      - objectTemplate: /var/configs/templates/pod.yml
+      - objectTemplate: /var/configs/templates/app-deployment.yml
         replicas: 1
         inputVars:
-          containerImage: gcr.io/google_containers/pause-amd64:3.0
+          readinessPeriod: 10
+
+      - objectTemplate: /var/configs/templates/postgres-service.yml
+        replicas: 1

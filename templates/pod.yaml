@@ -2,7 +2,7 @@ kind: Pod
 apiVersion: v1
 metadata:
   name: kubelet-density-{{.Iteration}}
-  namespace: burner
+  namespace: kubelet-density
   labels:
     name: kubelet-density
 spec:
