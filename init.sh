@@ -25,27 +25,24 @@ if [[ $1 == "launch" ]]; then
     
     if [[ $2 == "aws" ]]; then
         ./aws/createawscluster.sh aws
-        exit 0
     fi 
     if [[ $2 == "azure" ]]; then
         ./azure/createazurecluster.sh azure
-        exit 0
     else 
         echo "unknown cluster cannot be launched. Options are aws or azure "
         help
-        exit 0
     fi
     echo "would you like to initialize a test?"
 
-    if [[ $3 == "cgroupv2" ]]; then 
+    if [ $3 == "cgroupv2" ] || [ $2 == "cgroupv2" ]; then 
         ./common/setFeatureGate.sh cgroupv2 
     fi 
     
-    if [[ $4 == "kubeBurner" ]]; then 
+    if [ $4 == "kubeBurner" ] || [ $3 == "kubeBurner" ]; then 
         ./kubeBurner/test-kube-burner.sh aws
     fi 
 
-    if [[ $5 == "getLogs" ]]; then 
+    if [ $5 == "getLogs"] || [ $4 == "getLogs" ]; then 
         ./common/getLogs.sh $1
     fi 
 fi
