@@ -32,17 +32,16 @@ if [[ $1 == "launch" ]]; then
         echo "unknown cluster cannot be launched. Options are aws or azure "
         help
     fi
-    echo "would you like to initialize a test?"
 
     if [ $3 == "cgroupv2" ] || [ $2 == "cgroupv2" ]; then 
-        ./common/setFeatureGate.sh cgroupv2 
+        ./common/setFeaturegate.sh cgroupv2
     fi 
     
     if [ $4 == "kubeBurner" ] || [ $3 == "kubeBurner" ]; then 
         ./kubeBurner/test-kube-burner.sh aws
     fi 
 
-    if [ $5 == "getLogs"] || [ $4 == "getLogs" ]; then 
+    if [ $5 == "getLogs" ] || [ $4 == "getLogs" ]; then 
         ./common/getLogs.sh $1
     fi 
 fi
@@ -55,14 +54,4 @@ fi
 if [[ $1 == "destroy" ]]; then 
     ./common/destroyCluster.sh 
     exit 0
-fi 
-
-if [[ -f $1 ]]; then 
-      cp $1 auth/kubeconfig
-      ./common/setup
-      ./common/testscript.sh
-      exit 0
-  else 
-      echo "kubeconfig file not found" 
-      help 
 fi 

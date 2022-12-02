@@ -16,4 +16,4 @@ tls/*
 installers/*
 !installers/README.md
 openshift-install
-
+metrics/*
