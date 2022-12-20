@@ -21,7 +21,9 @@ echo "mcp updated!"
 BASTIONNODE="$(oc get nodes | grep worker | awk '{print $1}' | sed -n '2 p')" 
 oc adm uncordon "$BASTIONNODE"
 oc label node "$BASTIONNODE" node-role.kubernetes.io/bastion=
+echo "Getting the bastion IP" 
 BASTIONIP="$(curl https://raw.githubusercontent.com/eparis/ssh-bastion/master/deploy/deploy.sh | bash | grep "The bastion address is" | awk '{print $5}')"
+echo "Bastion IP updated" 
 oc adm cordon "$BASTIONNODE"
 
 WORKINGNODE="$(oc get nodes | grep worker | awk '{print $1}' | sed -n '1 p')"

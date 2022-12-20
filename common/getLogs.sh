@@ -21,5 +21,8 @@ logsLocation=$logDestination/$time"_"$platform"_"$workingNode.txt
 oc adm uncordon "$bastionNode"  
 echo $workingNode
 echo $logsLocation 
+sed s/900/910/ templates/setmaxpods.yaml > tmp/bumpmaxpods.yaml
+oc apply -f tmp/bumpmaxpods.yaml 
+sleep 30 
 oc debug node/$workingNode -- chroot /host "journalctl" "-b" "-1" > $logsLocation
 

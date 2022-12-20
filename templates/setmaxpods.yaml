@@ -7,4 +7,4 @@ spec:
     matchLabels:
       custom-kubelet: burner 
   kubeletConfig:
-    maxPods: 500
+    maxPods: 900

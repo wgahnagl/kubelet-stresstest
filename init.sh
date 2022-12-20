@@ -2,22 +2,31 @@ function help {
     echo "usage"
     echo "---------------"
     echo "if you don't already have a cluster running, launch one by using " 
-    echo "./init launch [aws/azure] [cgroupv2] [kubeBurner] [getLogs]"
+    echo "./init launch [aws/azure]"
     echo ""
-    echo "if you already have a cluster, tests can be run by using " 
-    echo "./init [path to kubeconfig]"
-    echo "" 
     echo "clusters can be destroyed by using" 
     echo "./init destroy" 
     echo "" 
     echo "logs can be collected by using"
-    echo "./init collect" 
+    echo "./init getLogs"
+    echo ""
+    echo "featuregates" 
+    echo "./init cgroupv2"
+    echo "./init crun" 
+    echo "" 
+    echo "kubeburner can be activated by" 
+    echo "./init kubeBurner"  
 
 }
-
+export KUBECONFIG="auth/auth/kubeconfig" 
 
 if [[ -z "$1" ]]; then
     help
+    exit 0
+fi 
+
+if [[ $1 == "destroy" ]]; then 
+    ./common/destroyCluster.sh 
     exit 0
 fi 
 
@@ -32,26 +41,21 @@ if [[ $1 == "launch" ]]; then
         echo "unknown cluster cannot be launched. Options are aws or azure "
         help
     fi
-
-    if [ $3 == "cgroupv2" ] || [ $2 == "cgroupv2" ]; then 
-        ./common/setFeaturegate.sh cgroupv2
-    fi 
-    
-    if [ $4 == "kubeBurner" ] || [ $3 == "kubeBurner" ]; then 
-        ./kubeBurner/test-kube-burner.sh aws
-    fi 
-
-    if [ $5 == "getLogs" ] || [ $4 == "getLogs" ]; then 
-        ./common/getLogs.sh $1
-    fi 
 fi
 
-if [[ $1 == "collect"  ]]; then 
-    ./common/afterPods.sh
-    exit 0
+if [[ "$@" == *"cgroupv2"* ]]; then 
+    ./common/setFeaturegate.sh cgroupv2
+fi
+
+if [[ "$@" == *"crun"* ]]; then 
+    ./common/setFeaturegate.sh crun 
+fi 
+    
+if [[ "$@" == *"kubeBurner"* ]]; then 
+    ./kubeBurner/test-kube-burner.sh aws
 fi 
 
-if [[ $1 == "destroy" ]]; then 
-    ./common/destroyCluster.sh 
-    exit 0
+if [[ "$@" == *"getLogs"* ]]; then 
+    ./common/getLogs.sh $1
 fi 
+
